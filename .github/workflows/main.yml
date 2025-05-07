@@ -23,10 +23,13 @@ jobs:
       - name: Node.js 설정
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 의존성 설치
         run: sudo npm install
+
+      - name: 빌드
+        run: sudo npm run build
 
       - name: AWS 자격 증명 설정
         uses: aws-actions/configure-aws-credentials@v3
@@ -52,4 +55,4 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
             cd /home/bitnami/LoginMethod
-            sudo npm run restart
+            sudo pm2 restart dist/main.js
