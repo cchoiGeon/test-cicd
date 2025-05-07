@@ -45,7 +45,7 @@ jobs:
           username: ${{ env.LIGHTSAIL_USERNAME }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: '.'
-          target: '/home/bitnami/LoginMethod'
+          target: '/home/bitnami/test-cicd'
 
       - name: PM2 프로세스 재시작
         uses: appleboy/ssh-action@master
@@ -54,5 +54,5 @@ jobs:
           username: ${{ env.LIGHTSAIL_USERNAME }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            cd /home/bitnami/LoginMethod
+            cd /home/bitnami/test-cicd
             sudo pm2 restart dist/main.js
