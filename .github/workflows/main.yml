@@ -40,19 +40,19 @@ jobs:
 
       - name: SSH 키 설정
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > $HOME/.ssh/deploy_key
+          chmod 600 $HOME/.ssh/deploy_key
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.LIGHTSAIL_HOST }} >> ~/.ssh/known_hosts
+          ssh-add $HOME/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.LIGHTSAIL_HOST }} >> $HOME/.ssh/known_hosts
 
       - name: 기존 디렉토리 정리
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ env.LIGHTSAIL_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
             rm -rf /home/bitnami/test-cicd
             mkdir -p /home/bitnami/test-cicd
@@ -62,7 +62,7 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ env.LIGHTSAIL_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: 'dist/,package.json,package-lock.json'
           target: '/home/bitnami/test-cicd'
           strip_components: 0
@@ -72,7 +72,7 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ env.LIGHTSAIL_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
             cd /home/bitnami/test-cicd
             npm ci --production
